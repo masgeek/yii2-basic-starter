@@ -2,13 +2,14 @@
 
 namespace app\models;
 
-class User extends \yii\base\BaseObject implements \yii\web\IdentityInterface
+class User extends \yii\base\BaseObject
 {
-    public $id;
-    public $username;
-    public $password;
-    public $authKey;
-    public $accessToken;
+    public $confirm_password;
+    public $default_password;
+
+    const STATUS_DELETED = 0;
+    const STATUS_INACTIVE = 5;
+    const STATUS_ACTIVE = 10;
 
     private static $users = [
         '100' => [

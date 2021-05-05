@@ -1,10 +1,22 @@
 <?php
+Yii::setAlias('@logsfolder', 'logs');
+Yii::setAlias('@barcodefolder', 'barcodes');
 
-$params = require __DIR__ . '/params.php';
-$db = require __DIR__ . '/db.php';
+$params = require_once(__DIR__ . '/params.php');
+$db = require_once(__DIR__ . '/db.php');
+//$db = require __DIR__ . '/db_test.php';
+$session = require_once(__DIR__ . '/session.php');
+$log = require_once(__DIR__ . '/logger.php');
+$mailer = require_once(__DIR__ . '/mailer.php');
+$cache = require_once(__DIR__ . '/cache.php');
+$mpesa = require_once(__DIR__ . '/mpesa.php');
+
 
 $config = [
-    'id' => 'basic',
+    'id' => 'app',
+    'language' => 'en',
+    'timeZone' => 'Africa/Nairobi',
+    'name' => 'Rudolf',
     'basePath' => dirname(__DIR__),
     'bootstrap' => ['log'],
     'aliases' => [
@@ -12,9 +24,12 @@ $config = [
         '@npm' => '@vendor/npm-asset',
     ],
     'components' => [
+        'authManager' => [
+            'class' => 'yii\rbac\DbManager',
+        ],
         'request' => [
-            // !!! insert a secret key in the following (if it is empty) - this is required by cookie validation
-            'cookieValidationKey' => 'masgeek',
+            'cookieValidationKey' => 'D47934BCCAO2TROSBDCP230YGNPS0DU2P34,FSGD9FWH23RW=R980RWFWO',
+            'enableCsrfValidation' => true,
         ],
         'view' => [
             'theme' => [
@@ -23,32 +38,23 @@ $config = [
                 ],
             ],
         ],
-        'cache' => [
-            'class' => 'yii\caching\FileCache',
-        ],
         'user' => [
-            'identityClass' => 'app\models\User',
-            'enableAutoLogin' => true,
+            'identityClass' => 'app\common\models\User',
+            'enableAutoLogin' => false
         ],
+        'formatter' => [
+            'class' => 'app\common\components\MyFormatter',
+            'decimalSeparator' => '.',
+            'thousandSeparator' => ',',
+            'currencyCode' => 'KES',
+            'defaultTimeZone' => 'Africa/Nairobi'
+        ],
+        'cache' => $cache,
         'errorHandler' => [
             'errorAction' => 'site/error',
         ],
-        'mailer' => [
-            'class' => 'yii\swiftmailer\Mailer',
-            // send all mails to a file by default. You have to set
-            // 'useFileTransport' to false and configure a transport
-            // for the mailer to send real emails.
-            'useFileTransport' => true,
-        ],
-        'log' => [
-            'traceLevel' => YII_DEBUG ? 3 : 0,
-            'targets' => [
-                [
-                    'class' => 'yii\log\FileTarget',
-                    'levels' => ['error', 'warning'],
-                ],
-            ],
-        ],
+        'mailer' => $mailer,
+        'log' => $log,
         'db' => $db,
 
         'urlManager' => [
@@ -59,6 +65,15 @@ $config = [
         ],
     ],
     'params' => $params,
+    'as access' => [
+        'class' => 'app\common\components\MyAccessControl',
+        'allowActions' => [
+            'site/logout',
+            'call-back/stk',
+            'call-back/validate',
+            'site/request-password-reset'
+        ]
+    ],
     'modules' => [
 
     ],
@@ -69,15 +84,13 @@ if (YII_ENV_DEV) {
     $config['bootstrap'][] = 'debug';
     $config['modules']['debug'] = [
         'class' => 'yii\debug\Module',
-        // uncomment the following to add your IP if you are not connecting from localhost.
-        //'allowedIPs' => ['127.0.0.1', '::1'],
+        'allowedIPs' => ['127.0.0.1', '::1'],
     ];
 
     $config['bootstrap'][] = 'gii';
     $config['modules']['gii'] = [
         'class' => 'yii\gii\Module',
-        // uncomment the following to add your IP if you are not connecting from localhost.
-        //'allowedIPs' => ['127.0.0.1', '::1'],
+        'allowedIPs' => ['127.0.0.1', '::1'],
     ];
 }
 

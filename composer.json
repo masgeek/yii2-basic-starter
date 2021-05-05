@@ -19,8 +19,8 @@
         "yiisoft/yii2-bootstrap": "~2.0.10",
         "yiisoft/yii2-swiftmailer": "~2.0.0 || ~2.1.2",
         "bower-asset/fontawesome": "~5",
-        "almasaeed2010/adminlte": "~3.0"
-
+        "almasaeed2010/adminlte": "~3.0",
+        "mdmsoft/yii2-admin": "^2.12"
     },
     "require-dev": {
         "yiisoft/yii2-debug": "~2.1.16",

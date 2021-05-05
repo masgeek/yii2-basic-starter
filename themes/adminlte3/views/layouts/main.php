@@ -7,7 +7,7 @@ use app\widgets\Breadcrumbs;
 use yii\helpers\Html;
 
 app\themes\adminlte3\assets\AdminleAsset::register($this);
-app\assets\AppAsset::register($this);
+app\assetmanager\AppAsset::register($this);
 
 ?>
 <?php $this->beginPage() ?>
@@ -88,7 +88,7 @@ app\assets\AppAsset::register($this);
     <footer class="main-footer">
         <!-- To the right -->
         <div class="float-right d-none d-sm-inline">
-            <?= Yii::powered() ?>
+            <?= Yii::getVersion() ?>
         </div>
         <!-- Default to the left -->
         <strong>&copy; My Company <?= date('Y') ?></strong> All rights reserved.
