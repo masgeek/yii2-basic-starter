@@ -20,7 +20,8 @@
         "yiisoft/yii2-swiftmailer": "~2.0.0 || ~2.1.2",
         "bower-asset/fontawesome": "~5",
         "almasaeed2010/adminlte": "~3.0",
-        "mdmsoft/yii2-admin": "^2.12"
+        "mdmsoft/yii2-admin": "^2.12",
+        "league/csv": "^9.7"
     },
     "require-dev": {
         "yiisoft/yii2-debug": "~2.1.16",
@@ -36,17 +37,22 @@
     },
     "config": {
         "process-timeout": 1800,
+        "platform-check": true,
         "fxp-asset": {
             "enabled": false
         }
     },
     "scripts": {
         "post-install-cmd": [
-            "yii\\composer\\Installer::postInstall"
+            "yii\\composer\\Installer::postInstall",
+            "yarn"
         ],
         "post-create-project-cmd": [
             "yii\\composer\\Installer::postCreateProject",
             "yii\\composer\\Installer::postInstall"
+        ],
+        "post-update-cmd": [
+            "yarn autoclean --force"
         ]
     },
     "extra": {

@@ -1,6 +1,5 @@
 <?php
 Yii::setAlias('@logsfolder', 'logs');
-Yii::setAlias('@barcodefolder', 'barcodes');
 
 $params = require_once(__DIR__ . '/params.php');
 $db = require_once(__DIR__ . '/db.php');
@@ -9,14 +8,14 @@ $session = require_once(__DIR__ . '/session.php');
 $log = require_once(__DIR__ . '/logger.php');
 $mailer = require_once(__DIR__ . '/mailer.php');
 $cache = require_once(__DIR__ . '/cache.php');
-$mpesa = require_once(__DIR__ . '/mpesa.php');
+$modules = require_once(__DIR__ . '/modules.php');
 
 
 $config = [
     'id' => 'app',
     'language' => 'en',
     'timeZone' => 'Africa/Nairobi',
-    'name' => 'Rudolf',
+    'name' => 'App Name',
     'basePath' => dirname(__DIR__),
     'bootstrap' => ['log'],
     'aliases' => [
@@ -61,6 +60,8 @@ $config = [
             'enablePrettyUrl' => true,
             'showScriptName' => false,
             'rules' => [
+                '<controller>/<action:(update|delete|view)>/<id:\d+>' => '<controller>/<action>',
+                '<module>/<controller>/<action:(update|delete|view)>/<id:\d+>' => '<module>/<controller>/<action>',
             ],
         ],
     ],
@@ -68,15 +69,12 @@ $config = [
     'as access' => [
         'class' => 'app\common\components\MyAccessControl',
         'allowActions' => [
+//            '*',
             'site/logout',
-            'call-back/stk',
-            'call-back/validate',
             'site/request-password-reset'
         ]
     ],
-    'modules' => [
-
-    ],
+    'modules' => $modules,
 ];
 
 if (YII_ENV_DEV) {
